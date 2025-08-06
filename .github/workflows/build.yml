@@ -2,8 +2,8 @@ name: Build GBA ROM
 
 on:
   push:
-    branches: ['**']  # All branches
-  workflow_dispatch:  # Manual trigger
+    branches: ['**']
+  workflow_dispatch:
 
 jobs:
   build:
@@ -12,6 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Cache APT packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            /var/cache/apt
+            /var/lib/apt
+          key: ${{ runner.os }}-apt-${{ hashFiles('.github/workflows/build.yml') }}
+          restore-keys: |
+            ${{ runner.os }}-apt-
 
       - name: Install ARM toolchain
         run: |
