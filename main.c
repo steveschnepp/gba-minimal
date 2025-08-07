@@ -33,7 +33,8 @@ static void set_pixel(int x, int y, uint16_t color) {
 
 void main() {
     REG_DISPCNT = MODE3 | BG2_ENABLE;
-
+    memset(VIDEO_BUFFER, 0, 240 * 160 * sizeof(uint16_t));
+    
     int x = 120, y = 80;
 
     while (1) {
