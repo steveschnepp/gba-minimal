@@ -9,7 +9,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Needed for creating releases
+      contents: write
 
     steps:
       - name: Checkout code
@@ -30,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          tag=${{ github.sha }}
+          tag="build-$(git rev-parse --short HEAD)"
           gh release create "$tag" ./pixel.gba \
             --title "Release $tag" \
             --notes "Automated build of commit $tag"
