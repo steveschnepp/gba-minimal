@@ -16,8 +16,11 @@ main.o: main.c
 pixel.elf: crt0.o main.o
 	$(CC) $(CFLAGS) $(LDFLAGS) $^ -o $@
 
-pixel.gba: pixel.elf
-	$(OBJCOPY) -O binary $< $@
+pixel.gba: pixel.elf elf2gba
+	./elf2gba elf2gba pixel.elf pixel.gba "PIXEL" "ABCD" "01"
+
+elf2gba: elf2gba.c
+	gcc -std=c99 -o elf2gba elf2gba.c
 
 clean:
 	rm -f *.o *.elf *.gba
