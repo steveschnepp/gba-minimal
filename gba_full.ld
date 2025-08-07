@@ -1,58 +1,39 @@
 ENTRY(_start)
 
 MEMORY {
-  BIOS    (rx)  : ORIGIN = 0x00000000, LENGTH = 32K
-  EWRAM   (rw)  : ORIGIN = 0x02000000, LENGTH = 256K
-  IWRAM   (rw)  : ORIGIN = 0x03000000, LENGTH = 32K
-  IO      (rw)  : ORIGIN = 0x04000000, LENGTH = 1K
-  PALRAM  (rw)  : ORIGIN = 0x05000000, LENGTH = 1K
-  VRAM    (rw)  : ORIGIN = 0x06000000, LENGTH = 96K
-  OAM     (rw)  : ORIGIN = 0x07000000, LENGTH = 1K
-  ROM     (rx)  : ORIGIN = 0x08000000, LENGTH = 32M
+  ROM  (rx)  : ORIGIN = 0x08000000, LENGTH = 32M
+  IWRAM(rwx) : ORIGIN = 0x03000000, LENGTH = 256K
 }
 
 SECTIONS {
-  .text : {
-    KEEP(*(.init))
+  /* Reserve 192 bytes for GBA header */
+  .header 0x08000000 : {
+    . = 0xC0;
+  } >ROM
+
+  .text ALIGN(4) : {
     *(.text*)
     *(.rodata*)
   } > ROM
 
-  .data : {
+  .data ALIGN(4) : {
+    __data_start__ = .;
     *(.data*)
-  } > EWRAM AT > ROM
+    __data_end__ = .;
+  } > IWRAM AT > ROM
 
-  .bss : {
-    __bss_start__ = . ;
+  .bss ALIGN(4) (NOLOAD) : {
+    __bss_start__ = .;
     *(.bss*)
     *(COMMON)
-    __bss_end__ = . ;
-  } > EWRAM
-
-  .iwram : {
-    *(.iwram*)
+    __bss_end__ = .;
   } > IWRAM
 
-  .vram : {
-    *(.vram*)
-  } > VRAM
-
-  .oam : {
-    *(.oam*)
-  } > OAM
-
-  .palram : {
-    *(.palram*)
-  } > PALRAM
-
-  .iomem : {
-    *(.iomem*)
-  } > IO
+  . = ALIGN(4);
+  end = .;
 
   /DISCARD/ : {
+    *(.eh_frame)
     *(.comment)
-    *(.note*)
   }
-
-  _end = . ;
 }
