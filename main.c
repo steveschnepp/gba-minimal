@@ -31,6 +31,15 @@ static void set_pixel(int x, int y, uint16_t color) {
     VIDEO_BUFFER[y * 240 + x] = color;
 }
 
+#ifndef __thumb__
+#define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
+#else
+#define swi_call(x)   asm volatile("swi\t"#x"<<16" ::: "r0", "r1", "r2", "r3")
+#endif
+
+void VBlankIntrWait()
+{   swi_call(0x05); }
+
 void main() {
     REG_DISPCNT = MODE3 | BG2_ENABLE;
 
@@ -51,5 +60,7 @@ void main() {
         if (keys & KEY_DOWN && y < 159) y++;
 
         set_pixel(x, y, RGB15(31, 0, 0)); // Draw red pixel
+
+	VBlankIntrWait();
     }
 }
