@@ -4,7 +4,7 @@
 
 _start:
     b reset
-    .fill   0x150, 1, 0   // header
+    .fill   0xC0, 1, 0   // header
     .align
 
 reset:

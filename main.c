@@ -36,7 +36,7 @@ void main() {
 
     for (int i=0; i<240;i++)
         for (int j=0; j<160; j++)
-            set_pixel(i, j, 0);
+            set_pixel(i, j, RGB15(0, 7, 0));
     
     int x = 120, y = 80;
 
