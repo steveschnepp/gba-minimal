@@ -40,12 +40,22 @@ static void set_pixel(int x, int y, uint16_t color) {
 void VBlankIntrWait()
 {   swi_call(0x05); }
 
+
+#define REG_VCOUNT (*(volatile uint16_t*)0x04000006)
+
+void vid_vsync()
+{
+    while(REG_VCOUNT >= 160);   // wait till VDraw
+    while(REG_VCOUNT < 160);    // wait till VBlank
+}
+
+static int c = RGB15(1,1,1);
 void main() {
     REG_DISPCNT = MODE3 | BG2_ENABLE;
 
     for (int i=0; i<240;i++)
         for (int j=0; j<160; j++)
-            set_pixel(i, j, RGB15(0, 7, 0));
+            set_pixel(i, j, c++);
     
     int x = 120, y = 80;
 
@@ -61,6 +71,6 @@ void main() {
 
         set_pixel(x, y, RGB15(31, 0, 0)); // Draw red pixel
 
-	VBlankIntrWait();
+	vid_vsync();
     }
 }
