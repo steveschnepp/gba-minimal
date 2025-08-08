@@ -1,6 +1,6 @@
 MEMORY
 {
-    ROM   (rx)  : ORIGIN = 0x080000C0, LENGTH = 32M - 0xC0  /* skip header */
+    ROM   (rx)  : ORIGIN = 0x08000000, LENGTH = 32M
     EWRAM (w!x) : ORIGIN = 0x02000000, LENGTH = 256K
     IWRAM (w!x) : ORIGIN = 0x03000000, LENGTH = 32K
     VRAM  (wx)  : ORIGIN = 0x06000000, LENGTH = 96K  /* optional: GPU memory */

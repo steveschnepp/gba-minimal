@@ -4,6 +4,8 @@
 
 _start:
     b reset
+    .fill   0x150, 1, 0   // header
+    .align
 
 reset:
     ldr sp, =0x03007F00    @ Set stack pointer
