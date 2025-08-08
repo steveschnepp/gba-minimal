@@ -2,7 +2,7 @@ CC = arm-none-eabi-gcc
 LD = arm-none-eabi-ld
 OBJCOPY = arm-none-eabi-objcopy
 
-CFLAGS = -marm -mcpu=arm7tdmi -O2 -nostdlib -ffreestanding -Wall
+CFLAGS = -marm -mcpu=arm7tdmi -Oz -nostdlib -ffreestanding -Wall
 LDFLAGS = -T gba_full.ld
 
 all: pixel.gba
