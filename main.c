@@ -31,16 +31,14 @@ static void set_pixel(int x, int y, uint16_t color) {
     VIDEO_BUFFER[y * 240 + x] = color;
 }
 
-#if 0
 #ifndef __thumb__
 #define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
 #else
-#define swi_call(x)   asm volatile("swi\t"#x"<<16" ::: "r0", "r1", "r2", "r3")
+#define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
 #endif
 
 void VBlankIntrWait()
 {   swi_call(0x05); }
-#endif
 
 
 #define REG_VCOUNT (*(volatile uint16_t*)0x04000006)
@@ -73,6 +71,6 @@ void main() {
 
         set_pixel(x, y, RGB15(31, 0, 0)); // Draw red pixel
 
-	vid_vsync();
+	VBlankIntrWait();
     }
 }
