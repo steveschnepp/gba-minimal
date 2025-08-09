@@ -2,8 +2,8 @@ name: Build and Release GBA ROM
 
 on:
   push:
-    branches: ['**']      # all branches
     tags: ['v*']          # tags starting with v
+    branches-ignore: []   # don't block any branch
   pull_request:
   workflow_dispatch:
 
