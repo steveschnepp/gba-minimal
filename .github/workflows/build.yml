@@ -50,6 +50,9 @@ jobs:
       contents: write
   
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+  
       - name: Download ROM artifact
         uses: actions/download-artifact@v4
         with:
@@ -58,24 +61,12 @@ jobs:
       - name: Install GitHub CLI
         run: sudo apt-get install -y gh
   
-      - name: Create empty GitHub Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tag="${GITHUB_REF#refs/tags/}"
-          gh release create "$tag" --title "Release $tag" --notes "Automated build for tag $tag" --draft
-  
-      - name: Upload asset to release
+      - name: Create GitHub Release and Upload Asset
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           tag="${GITHUB_REF#refs/tags/}"
           mv pixel.gba pixel-$tag.gba
-          gh release upload "$tag" pixel-$tag.gba
-  
-      - name: Publish Release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          tag="${GITHUB_REF#refs/tags/}"
-          gh release edit "$tag" --draft=false
+          gh release create "$tag" ./pixel-$tag.gba \
+            --title "Release $tag" \
+            --notes "Automated build for tag $tag"
