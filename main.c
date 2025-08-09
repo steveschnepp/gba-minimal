@@ -31,6 +31,7 @@ static void set_pixel(int x, int y, uint16_t color) {
     VIDEO_BUFFER[y * 240 + x] = color;
 }
 
+#if 0
 #ifndef __thumb__
 #define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
 #else
@@ -39,6 +40,7 @@ static void set_pixel(int x, int y, uint16_t color) {
 
 void VBlankIntrWait()
 {   swi_call(0x05); }
+#endif
 
 
 #define REG_VCOUNT (*(volatile uint16_t*)0x04000006)
