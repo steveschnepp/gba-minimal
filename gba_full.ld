@@ -14,6 +14,7 @@ SECTIONS
     .text : ALIGN(4)
     {
         _text_start = .;
+        KEEP(*(.crt0))
         KEEP(*(.init))
         *(.text*)
         *(.rodata*)

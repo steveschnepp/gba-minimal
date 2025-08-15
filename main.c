@@ -23,22 +23,29 @@ enum {
     KEY_L      = 1 << 9,
 };
 
-static inline uint16_t keys_pressed() {
+static inline
+uint16_t keys_pressed() {
     return ~KEY_INPUT & KEY_MASK;
 }
 
-static void set_pixel(int x, int y, uint16_t color) {
+static inline
+void set_pixel(int x, int y, uint16_t color) {
     VIDEO_BUFFER[y * 240 + x] = color;
 }
 
-#ifndef __thumb__
-#define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
-#else
-#define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
-#endif
+/* Don't use interrupts for vblank, as it is not initialized */
+#if 0
+// #define swi_call(x)   asm volatile("swi\t"#x ::: "r0", "r1", "r2", "r3")
+__attribute__((target("arm")))
+void swi_call(int x) {
+	asm volatile("swi %0" :: "r" (x) : "r0", "r1", "r2", "r3");
+}
 
 void VBlankIntrWait()
-{   swi_call(0x05); }
+{
+	swi_call(0x05);
+}
+#endif
 
 
 #define REG_VCOUNT (*(volatile uint16_t*)0x04000006)
@@ -71,6 +78,7 @@ void main() {
 
         set_pixel(x, y, RGB15(31, 0, 0)); // Draw red pixel
 
-	VBlankIntrWait();
+	//VBlankIntrWait();
+	vid_vsync();
     }
 }

@@ -2,13 +2,11 @@
     .cpu arm7tdmi
     .arm
     .global _start
-
-    .org 0x00000000
+    .section .crt0
 
 /* ======== GBA header area ======== */
     b   _start_code         @ First instruction (ARM branch) to code
     .space 0xC0 - 4         @ Reserve rest of 0xC0 bytes
-    .space 0xA0
 
 /* ======== Actual startup code ======== */
 _start_code:
